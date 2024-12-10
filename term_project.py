@@ -2,7 +2,7 @@ import getpass
 import mysql.connector
 
 # MySQL 연결
-def connect_to_database(username, pw):
+def connectToDatabase(username, pw):
     return mysql.connector.connect(
         host="192.168.40.3",
         user=username,
@@ -10,6 +10,65 @@ def connect_to_database(username, pw):
         database="term_project",
         port=4567
     )
+
+# 데이터 삽입
+def insertData(connection, relation):
+    cursor = connection.cursor()
+
+    if relation == "student":
+        query = "INSERT INTO STUDENT VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
+        print("-------------------------------------------")
+        sin = input("Sin: ")
+        phone = input("Phone: ")
+        sname = input("SName: ")
+        sex = input("sex: ")
+        major = input("major: ")
+        super_sin = input("Super_Sin: ")
+        cin = input("Cin: ")
+        signup_date = input("Signup_date: ")
+        print("-------------------------------------------")
+        cursor.execute(query, (sin, phone, sname, sex, major, super_sin, cin, signup_date))
+        connection.commit()
+        print(f"Data inserted: {sin}, {phone}, {sname}, {sex}, {major}, {super_sin}, {cin}, {signup_date}")
+    elif relation == "club":
+        query = "INSERT INTO CLUB VALUES (%s, %s, %s)"
+        print("-------------------------------------------")
+        cin = input("Cin: ")
+        cname = input("CName: ")
+        location = input("Location: ")
+        print("-------------------------------------------")
+        cursor.execute(query, (cin, cname, location))
+        connection.commit()
+        print(f"Data inserted: {cin}, {cname}, {location}")
+    elif relation == "club manager":
+        query = "INSERT INTO CLUB_MANAGER VALUES (%s, %s, %s, %s, %s, %s, %s)"
+        print("-------------------------------------------")
+        cin = input("Cin: ")
+        president_sin = input("President_Sin: ")
+        p_start_date = input("P_Start_date: ")
+        vicepresident_sin = input("VicePresident_Sin: ")
+        vp_start_date = input("VP_Start_date: ")
+        treasurer_sin = input("Treasurer_Sin: ")
+        t_start_date = input("T_Start_date: ")
+        print("-------------------------------------------")
+        cursor.execute(query, (cin, president_sin, p_start_date, vicepresident_sin, vp_start_date, treasurer_sin, t_start_date))
+        connection.commit()
+        print(f"Data inserted: {cin}, {president_sin}, {p_start_date}, {vicepresident_sin}, {vp_start_date}, {treasurer_sin}, {t_start_date}")
+    elif relation == "group-study":
+        query = "INSERT INTO GROUP_STUDY VALUES (%s, %s, %s, %s, %s, %s)"
+        query2 = "INSERT INTO PARTICIPATE_IN VALUES (%s, %s %s)"
+        print("-------------------------------------------")
+        gin = input("Gin: ")
+        gname = input("GName: ")
+        leader_sin = input("Leader_Sin: ")
+        l_start_date = input("L_Start_date: ")
+        subject = input("Subject: ")
+        cin = input("Cin: ")
+        print("-------------------------------------------")
+        cursor.execute(query, (gin, gname, leader_sin, l_start_date, subject, cin))
+        cursor.execute(query2, (leader_sin, gin, l_start_date))
+        connection.commit()
+        print(f"Data inserted: {gin}, {gname}, {leader_sin}, {l_start_date}, {subject}, {cin}")
 
 # 메인 함수
 def main():
@@ -45,7 +104,7 @@ def main():
             i = 1
             print("\n===================================%s===================================" % (menu[0]))
             while i <= len(menu) - 1:
-                if (len(menu) >= i + 2):
+                if len(menu) >= i + 2:
                     print("%-40s %-40s" % (menu[i], menu[i + 1]))
                 else:
                     print("%-40s" % (menu[i]))
@@ -54,16 +113,40 @@ def main():
             choice = input("Enter your choice: ")
 
             if choice == "1":
-                if (connected == False):
+                if connected == False:
                     user = input("User: ")
                     pw = getpass.getpass("Password: ")
-                    connection = connect_to_database(user, pw)
+                    connection = connectToDatabase(user, pw)
                     print("Connected to the database.")
                     connected = True
                 else:
                     print("You already have been connected to database.")
             elif choice == "2":
                 break
+            elif choice == "11":
+                if connected == False:
+                    print("You need to log in the database.")
+                    continue
+                else:
+                    insertData(connection, "student")
+            elif choice == "12":
+                if connected == False:
+                    print("You need to log in the database.")
+                    continue
+                else:
+                    insertData(connection, "club")
+            elif choice == "13":
+                if connected == False:
+                    print("You need to log in the database.")
+                    continue
+                else:
+                    insertData(connection, "club manager")
+            elif choice == "14":
+                if connected == False:
+                    print("You need to log in the database.")
+                    continue
+                else:
+                    insertData(connection, "group-study")
     except mysql.connector.Error as err:
         print(f"Error: {err}")
     finally:
