@@ -95,7 +95,7 @@ def searchAllData(connection, relation):
     elif relation == "CLUB_MANAGER":
         print("----------------------------------------------------------------------------------------------------------------------")
         print("%s%s%s%s%s%13s%9s %s %s%13s%7s %s %s %s%s" % 
-            ("|", "동아리번호", "|", "회장 학번", "|", "회장 시작날짜", "|", "부회장 학번", "|", "부회장 시작날짜", "|", "총무 학번", "|", "총무 시작날짜", "|"))
+            ("|", "동아리번호", "|", "회장 학번", "|", "회장 임명날짜", "|", "부회장 학번", "|", "부회장 임명날짜", "|", "총무 학번", "|", "총무 임명날짜", "|"))
         print("----------------------------------------------------------------------------------------------------------------------")
         for row in results:
             print(row)
@@ -103,12 +103,138 @@ def searchAllData(connection, relation):
     elif relation == "GROUP_STUDY":
         print("----------------------------------------------------------------------------------------------")
         print("%s%s%s %7s%6s %6s%2s %12s%8s %5s%5s%s%s" %
-            ("|", "그룹번호", "|", "그룹이름", "|", "관리자 학번", "|", "관리자 시작날짜", "|", "주제", "|", "동아리번호", "|"))
+            ("|", "그룹번호", "|", "그룹이름", "|", "관리자 학번", "|", "관리자 임명날짜", "|", "주제", "|", "동아리번호", "|"))
         print("----------------------------------------------------------------------------------------------")
         for row in results:
             print(row)
         print("----------------------------------------------------------------------------------------------")
 
+    return results
+
+# 특정 조건을 가진 데이터 검색
+# def searchDataByFilter(connection, relation):
+#     cursor = connection.cursor()
+#     query = "SELECT * FROM %s" % (relation)
+#     cursor.execute(query)
+#     results = cursor.fetchall()
+
+# 데이터 수정
+def updateData(connection, relation):
+    results = searchAllData(connection, relation)
+    cursor = connection.cursor()
+
+    if relation == "STUDENT":
+        sin_tobe_updated = input("정보를 수정할 학생의 학번: ")
+
+        for row in results:
+            if row[0] == sin_tobe_updated:
+                break
+
+        new_value = [
+            input("학번: "),
+            input("전화번호: "),
+            input("이름: "),
+            input("성별: "),
+            input("학과: "),
+            input("멘토학번: "),
+            input("동아리번호: "),
+            input("동아리 가입날짜: ")
+            ]
+
+        # 새로 입력한 값들이 ""일 경우 기존 데이터를 유지
+        i = 0
+        for value in new_value:
+            if value == "":
+                new_value[i] = row[i]
+            i = i + 1
+
+        query = ("UPDATE %s SET Sin='%s', Phone='%s', SName='%s', Sex='%s', Major='%s', Super_Sin='%s', Cin='%s', Signup_date='%s' WHERE Sin='%s'" 
+        % (relation, new_value[0], new_value[1], new_value[2], new_value[3], new_value[4], new_value[5], new_value[6], new_value[7], sin_tobe_updated))
+        cursor.execute(query)
+        connection.commit()
+    elif relation == "CLUB":
+        cin_tobe_updated = input("정보를 수정할 동아리의 동아리 번호: ")
+
+        for row in results:
+            if row[0] == cin_tobe_updated:
+                break
+
+        new_value = [
+            input("동아리 번호: "),
+            input("동아리 이름: "),
+            input("장소: ")
+        ]
+
+        # 새로 입력한 값들이 ""일 경우 기존 데이터를 유지
+        i = 0
+        for value in new_value:
+            if value == "":
+                new_value[i] = row[i]
+            i = i + 1
+
+        query = ("UPDATE %s SET Cin='%s', CName='%s', Location='%s' WHERE Cin='%s'" 
+                % (relation, new_value[0], new_value[1], new_value[2], cin_tobe_updated))
+        cursor.execute(query)
+        connection.commit()
+    elif relation == "CLUB_MANAGER":
+        cin_tobe_updated = input("정보를 수정할 동아리 관리자 목록의 동아리 번호: ")
+
+        for row in results:
+            if row[0] == cin_tobe_updated:
+                break
+
+        new_value = [
+            input("동아리번호: "),
+            input("동아리 회장 학번: "),
+            input("동아리 회장 임명 날짜: "),
+            input("동아리 부회장 학번: "),
+            input("동아리 부회장 임명 날짜: "),
+            input("동아리 총무 학번: "),
+            input("동아리 총무 임명 날짜: ")
+        ]
+
+        # 새로 입력한 값들이 ""일 경우 기존 데이터를 유지
+        i = 0
+        for value in new_value:
+            if value == "":
+                new_value[i] = row[i]
+            i = i + 1
+
+        query = ("UPDATE %s SET Cin='%s', President_Sin='%s', P_Start_date='%s', VicePresident_Sin='%s', VP_Start_date='%s', Treasurer_Sin='%s', T_Start_date='%s' WHERE Cin='%s'"
+                % (relation, new_value[0], new_value[1], new_value[2], new_value[3], new_value[4], new_value[5], new_value[6], cin_tobe_updated))
+        cursor.execute(query)
+        connection.commit()
+    elif relation == "GROUP_STUDY":
+        gin_tobe_updated = input("정보를 수정할 그룹스터디의 그룹 번호: ")
+
+        for row in results:
+            if row[0] == gin_tobe_updated:
+                break
+
+        new_value = [
+            input("그룹 번호: "),
+            input("그룹 이름: "),
+            input("관리자 학번: "),
+            input("관리자 임명 날짜: "),
+            input("주제: "),
+            input("동아리번호: ")
+        ]
+        
+        # 새로 입력한 값들이 ""일 경우 기존 데이터를 유지
+        i = 0
+        for value in new_value:
+            if value == "":
+                new_value[i] = row[i]
+            i = i + 1
+
+        query = ("UPDATE %s SET Gin='%s', GName='%s', Leader_Sin='%s', L_Start_date='%s', Subject='%s', Cin='%s' WHERE Gin='%s'"
+                % (relation, new_value[0], new_value[1], new_value[2], new_value[3], new_value[4], new_value[5], gin_tobe_updated))
+        cursor.execute(query)
+        connection.commit()
+
+    print(f"Data updated to:", end=' ')
+    for updated_value in new_value:
+        print(updated_value, end=' ')
 
 # 메인 함수
 def main():
@@ -139,8 +265,8 @@ def main():
     ]
 
     connected = False
-    try:
-        while True:
+    while True:
+        try:
             i = 1
             print("\n===================================%s===================================" % (menu[0]))
             while i <= len(menu) - 1:
@@ -162,6 +288,9 @@ def main():
                 else:
                     print("You already have been connected to database.")
             elif choice == "2":
+                connection.close()
+                print("Connection closed.\n")
+                connected = False
                 break
             elif choice == "3":
                 if connected == False:
@@ -187,6 +316,12 @@ def main():
                     continue
                 else:
                     searchAllData(connection, "GROUP_STUDY")
+            # elif choice == "7":
+            #     if connected == False:
+            #         print("You need to log in the database.")
+            #         continue
+            #     else:
+            #         searchDataByFilter(connection, "STUDENT")
             elif choice == "11":
                 if connected == False:
                     print("You need to log in the database.")
@@ -211,13 +346,32 @@ def main():
                     continue
                 else:
                     insertData(connection, "GROUP_STUDY")
-    except mysql.connector.Error as err:
-        print(f"Error: {err}")
-    finally:
-        if connection:
-            connection.close()
-            print("Connection closed.\n")
-            connected = False
+            elif choice == "15":
+                if connected == False:
+                    print("You need to log in the database.")
+                    continue
+                else:
+                    updateData(connection, "STUDENT")
+            elif choice == "16":
+                if connected == False:
+                    print("You need to log in the database.")
+                    continue
+                else:
+                    updateData(connection, "CLUB")
+            elif choice == "17":
+                if connected == False:
+                    print("You need to log in the database.")
+                    continue
+                else:
+                    updateData(connection, "CLUB_MANAGER")
+            elif choice == "18":
+                if connected == False:
+                    print("You need to log in the database.")
+                    continue
+                else:
+                    updateData(connection, "GROUP_STUDY")
+        except mysql.connector.Error as err:
+            print(f"Error: {err}")
 
 if __name__ == "__main__":
     main()
