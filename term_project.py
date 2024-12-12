@@ -111,13 +111,6 @@ def searchAllData(connection, relation):
 
     return results
 
-# 특정 조건을 가진 데이터 검색
-# def searchDataByFilter(connection, relation):
-#     cursor = connection.cursor()
-#     query = "SELECT * FROM %s" % (relation)
-#     cursor.execute(query)
-#     results = cursor.fetchall()
-
 # 데이터 수정
 def updateData(connection, relation):
     results = searchAllData(connection, relation)
@@ -314,22 +307,18 @@ def main():
         "4. View all clubs",
         "5. View all club managers",
         "6. View all group studys",
-        "7. Find the students with filters",
-        "8. Find the clubs with filters",
-        "9. Find the club managers with filters",
-        "10. Find the group-studys with filters",
-        "11. Add a student",
-        "12. Add a club",
-        "13. Add a club manager",
-        "14. Add a group-study",
-        "15. Update a student",
-        "16. Update a club",
-        "17. Update a club manager",
-        "18. Update a group-study",
-        "19. Delete a student",
-        "20. Delete a club",
-        "21. Delete a club manger",
-        "22. Delete a group-study"
+        "7. Add a student",
+        "8. Add a club",
+        "9. Add a club manager",
+        "10. Add a group-study",
+        "11. Update a student",
+        "12. Update a club",
+        "13. Update a club manager",
+        "14. Update a group-study",
+        "15. Delete a student",
+        "16. Delete a club",
+        "17. Delete a club manger",
+        "18. Delete a group-study"
     ]
 
     connected = False
@@ -374,41 +363,32 @@ def main():
                             searchAllData(connection, "CLUB_MANAGER")
                         elif choice == 6:
                             searchAllData(connection, "GROUP_STUDY")
-                    # elif choice >= 7 and choice <= 10:
-                    #     if choice == 7:
-                    #         searchDataByFilter(connection, "STUDENT")
-                    #     elif choice == 8:
-                    #         searchDataByFilter(connection, "CLUB")
-                    #     elif choice == 9:
-                    #         searchDataByFilter(connection, "CLUB_MANAGER")
-                    #     elif choice == 10:
-                    #         searchDataByFilter(connection, "GROUP_STUDY")
+                    elif choice >= 7 and choice <= 10:
+                        if choice == 7:
+                            insertData(connection, "STUDENT")
+                        elif choice == 8:
+                            insertData(connection, "CLUB")
+                        elif choice == 9:
+                            insertData(connection, "CLUB_MANAGER")
+                        elif choice == 10:
+                            insertData(connection, "GROUP_STUDY")
                     elif choice >= 11 and choice <= 14:
                         if choice == 11:
-                            insertData(connection, "STUDENT")
+                            updateData(connection, "STUDENT")
                         elif choice == 12:
-                            insertData(connection, "CLUB")
+                            updateData(connection, "CLUB")
                         elif choice == 13:
-                            insertData(connection, "CLUB_MANAGER")
+                            updateData(connection, "CLUB_MANAGER")
                         elif choice == 14:
-                            insertData(connection, "GROUP_STUDY")
+                            updateData(connection, "GROUP_STUDY")
                     elif choice >= 15 and choice <= 18:
                         if choice == 15:
-                            updateData(connection, "STUDENT")
-                        elif choice == 16:
-                            updateData(connection, "CLUB")
-                        elif choice == 17:
-                            updateData(connection, "CLUB_MANAGER")
-                        elif choice == 18:
-                            updateData(connection, "GROUP_STUDY")
-                    elif choice >= 19 and choice <= 22:
-                        if choice == 19:
                             deleteData(connection, "STUDENT")
-                        elif choice == 20:
+                        elif choice == 16:
                             deleteData(connection, "CLUB")
-                        elif choice == 21:
+                        elif choice == 17:
                             deleteData(connection, "CLUB_MANAGER")
-                        elif choice == 22:
+                        elif choice == 18:
                             deleteData(connection, "GROUP_STUDY")
         except mysql.connector.Error as err:
             print(f"Error: {err}")
