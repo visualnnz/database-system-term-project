@@ -236,6 +236,74 @@ def updateData(connection, relation):
     for updated_value in new_value:
         print(updated_value, end=' ')
 
+# 데이터 삭제
+def deleteData(connection, relation):
+    results = searchAllData(connection, relation)
+    cursor = connection.cursor()
+
+    found = False
+
+    if relation == "STUDENT":
+        sin_tobe_deleted = input("정보를 삭제할 학생의 학번: ")
+
+        for row in results:
+            if row[0] == sin_tobe_deleted:
+                found = True
+                break
+
+        if found == False:
+            print("Data not found")
+            return
+
+        query = ("DELETE FROM %s WHERE Sin='%s'" % (relation, sin_tobe_deleted))
+        cursor.execute(query)
+        connection.commit()
+    elif relation == "CLUB":
+        cin_tobe_deleted = input("정보를 삭제할 동아리의 동아리번호: ")
+
+        for row in results:
+            if row[0] == cin_tobe_deleted:
+                found = True
+                break
+
+        if found == False:
+            print("Data not found")
+            return
+
+        query = ("DELETE FROM %s WHERE Cin='%s'" % (relation, cin_tobe_deleted))
+        cursor.execute(query)
+        connection.commit()
+    elif relation == "CLUB_MANAGER":
+        cin_tobe_deleted = input("정보를 삭제할 동아리 관리자 목록의 동아리번호: ")
+
+        for row in results:
+            if row[0] == cin_tobe_deleted:
+                found = True
+                break
+
+        if found == False:
+            print("Data not found")
+            return
+
+        query = ("DELETE FROM %s WHERE Cin='%s'" % (relation, cin_tobe_deleted))
+        cursor.execute(query)
+        connection.commit()
+    elif relation == "GROUP_STUDY":
+        gin_tobe_deleted = input("정보를 삭제할 그룹스터디의 그룹번호: ")
+
+        for row in results:
+            if row[0] == gin_tobe_deleted:
+                found = True
+                break
+
+        if found == False:
+            print("Data not found")
+            return
+
+        query = ("DELETE FROM %s WHERE Gin='%s'" % (relation, gin_tobe_deleted))
+        cursor.execute(query)
+        connection.commit()
+
 # 메인 함수
 def main():
     menu = [
@@ -276,9 +344,9 @@ def main():
                     print("%-40s" % (menu[i]))
                 i = i + 2
             print("============================================================================")
-            choice = input("Enter your choice: ")
+            choice = int(input("Enter your choice: "))
 
-            if choice == "1":
+            if choice == 1:
                 if connected == False:
                     user = input("User: ")
                     pw = getpass.getpass("Password: ")
@@ -287,89 +355,61 @@ def main():
                     connected = True
                 else:
                     print("You already have been connected to database.")
-            elif choice == "2":
+            elif choice == 2:
                 connection.close()
                 print("Connection closed.\n")
                 connected = False
                 break
-            elif choice == "3":
+            elif choice >= 3 and choice <= 22:
                 if connected == False:
                     print("You need to log in the database.")
                     continue
                 else:
-                    searchAllData(connection, "STUDENT")
-            elif choice == "4":
-                if connected == False:
-                    print("You need to log in the database.")
-                    continue
-                else:
-                    searchAllData(connection, "CLUB")
-            elif choice == "5":
-                if connected == False:
-                    print("You need to log in the database.")
-                    continue
-                else:
-                    searchAllData(connection, "CLUB_MANAGER")
-            elif choice == "6":
-                if connected == False:
-                    print("You need to log in the database.")
-                    continue
-                else:
-                    searchAllData(connection, "GROUP_STUDY")
-            # elif choice == "7":
-            #     if connected == False:
-            #         print("You need to log in the database.")
-            #         continue
-            #     else:
-            #         searchDataByFilter(connection, "STUDENT")
-            elif choice == "11":
-                if connected == False:
-                    print("You need to log in the database.")
-                    continue
-                else:
-                    insertData(connection, "STUDENT")
-            elif choice == "12":
-                if connected == False:
-                    print("You need to log in the database.")
-                    continue
-                else:
-                    insertData(connection, "CLUB")
-            elif choice == "13":
-                if connected == False:
-                    print("You need to log in the database.")
-                    continue
-                else:
-                    insertData(connection, "CLUB_MANAGER")
-            elif choice == "14":
-                if connected == False:
-                    print("You need to log in the database.")
-                    continue
-                else:
-                    insertData(connection, "GROUP_STUDY")
-            elif choice == "15":
-                if connected == False:
-                    print("You need to log in the database.")
-                    continue
-                else:
-                    updateData(connection, "STUDENT")
-            elif choice == "16":
-                if connected == False:
-                    print("You need to log in the database.")
-                    continue
-                else:
-                    updateData(connection, "CLUB")
-            elif choice == "17":
-                if connected == False:
-                    print("You need to log in the database.")
-                    continue
-                else:
-                    updateData(connection, "CLUB_MANAGER")
-            elif choice == "18":
-                if connected == False:
-                    print("You need to log in the database.")
-                    continue
-                else:
-                    updateData(connection, "GROUP_STUDY")
+                    if choice >= 3 and choice <= 6:
+                        if choice == 3:
+                            searchAllData(connection, "STUDENT")
+                        elif choice == 4:
+                            searchAllData(connection, "CLUB")
+                        elif choice == 5:
+                            searchAllData(connection, "CLUB_MANAGER")
+                        elif choice == 6:
+                            searchAllData(connection, "GROUP_STUDY")
+                    # elif choice >= 7 and choice <= 10:
+                    #     if choice == 7:
+                    #         searchDataByFilter(connection, "STUDENT")
+                    #     elif choice == 8:
+                    #         searchDataByFilter(connection, "CLUB")
+                    #     elif choice == 9:
+                    #         searchDataByFilter(connection, "CLUB_MANAGER")
+                    #     elif choice == 10:
+                    #         searchDataByFilter(connection, "GROUP_STUDY")
+                    elif choice >= 11 and choice <= 14:
+                        if choice == 11:
+                            insertData(connection, "STUDENT")
+                        elif choice == 12:
+                            insertData(connection, "CLUB")
+                        elif choice == 13:
+                            insertData(connection, "CLUB_MANAGER")
+                        elif choice == 14:
+                            insertData(connection, "GROUP_STUDY")
+                    elif choice >= 15 and choice <= 18:
+                        if choice == 15:
+                            updateData(connection, "STUDENT")
+                        elif choice == 16:
+                            updateData(connection, "CLUB")
+                        elif choice == 17:
+                            updateData(connection, "CLUB_MANAGER")
+                        elif choice == 18:
+                            updateData(connection, "GROUP_STUDY")
+                    elif choice >= 19 and choice <= 22:
+                        if choice == 19:
+                            deleteData(connection, "STUDENT")
+                        elif choice == 20:
+                            deleteData(connection, "CLUB")
+                        elif choice == 21:
+                            deleteData(connection, "CLUB_MANAGER")
+                        elif choice == 22:
+                            deleteData(connection, "GROUP_STUDY")
         except mysql.connector.Error as err:
             print(f"Error: {err}")
 
